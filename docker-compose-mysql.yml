@@ -4,6 +4,7 @@ services:
   db:
     image: mysql:8.0.35
     platform: linux/x86_64
+    container_name: mysql_db
     environment:
       MYSQL_DATABASE: logdb
       MYSQL_USER: log
@@ -15,11 +16,10 @@ services:
     volumes:
       - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./mysql/init:/docker-entrypoint-initdb.d
-      - ./:/home
+      - ./src/mysql:/home
       # DockerのMySQLイメージは「/docker-entrypoint-initdb.d」にマウントしたディレクトリに
       # 「.sql」「.sh」「.sql.gz」という拡張子でファイルを配置しておくと、
       # MySQLイメージからコンテナを生成・起動する時に、それらのファイルを読み込み実行してくれる
       # この仕組みを利用して、MySQLコンテナ生成・起動時に初期データを登録する
-    container_name: mysql_db
     restart: always
     working_dir: /home
